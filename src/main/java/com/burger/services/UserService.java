@@ -2,6 +2,8 @@ package com.burger.services;
 
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.burger.entities.User;
 import com.burger.repositories.UserRepository;
 
@@ -32,8 +34,12 @@ public class UserService extends BaseService<User> {
   // userRepository.findByFields(searchMap));
   // }
 
-  public User saveOrUpdate(User customers) {
-    return transaction.doInTransaction(() -> userRepository.saveOrUpdate(customers));
+  public User saveOrUpdate(User user) {
+    String salt = BCrypt.gensalt(10);
+    String hashPass = BCrypt.hashpw(user.getPassword(), salt);
+    user.setPassword(hashPass);
+
+    return transaction.doInTransaction(() -> userRepository.saveOrUpdate(user));
   }
 
   public void delete(Integer id) {

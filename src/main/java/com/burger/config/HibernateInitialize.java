@@ -19,7 +19,7 @@ public class HibernateInitialize {
     if (sessionFactory == null) {
       try {
         Configuration configuration = new Configuration();
-        configuration.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
+        configuration.setProperty(Environment.HBM2DDL_AUTO, "update");
         classes.forEach(configuration::addAnnotatedClass);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()

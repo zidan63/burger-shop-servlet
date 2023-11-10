@@ -1,21 +1,22 @@
 package com.burger.repositories;
 
-import jakarta.persistence.TypedQuery;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import com.burger.config.HibernateInitialize;
+import com.burger.entities.BaseEntity;
+import com.burger.others.SearchMap;
+
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
-import com.burger.config.HibernateInitialize;
-import com.burger.others.SearchMap;
-
-import java.util.List;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-class BaseRepository<T> {
+public class BaseRepository<T extends BaseEntity> {
   protected final SessionFactory factory;
   protected final Class<T> type;
 
@@ -24,13 +25,23 @@ class BaseRepository<T> {
     factory = HibernateInitialize.getSessionFactory();
   }
 
-  public T findOne(Integer id) {
-    return factory.getCurrentSession().get(type, id);
+  public T findById(Integer id) {
+    Session session = factory.getCurrentSession();
+    CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+    CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(type);
+    Root<T> root = criteriaQuery.from(type);
+    criteriaQuery.select(root);
+
+    criteriaQuery.where(
+        criteriaBuilder.equal(root.get("id"), id));
+
+    return session.createQuery(criteriaQuery).uniqueResult();
   }
 
   public List<T> findAll() {
     Session session = factory.getCurrentSession();
-    CriteriaQuery<T> criteriaQuery = getCriteriaQuery(session);
+    CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+    CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(type);
     Root<T> root = criteriaQuery.from(type);
     criteriaQuery.select(root);
 
@@ -39,11 +50,10 @@ class BaseRepository<T> {
 
   public List<T> findByFields(List<SearchMap> searchMaps) {
     Session session = factory.getCurrentSession();
-    CriteriaQuery<T> criteriaQuery = getCriteriaQuery(session);
+    CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+    CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(type);
     Root<T> root = criteriaQuery.from(type);
     criteriaQuery.select(root);
-
-    CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 
     for (SearchMap searchMap : searchMaps) {
       if (searchMap.getField() instanceof String) {
@@ -69,13 +79,15 @@ class BaseRepository<T> {
     return factory.getCurrentSession().merge(data);
   }
 
-  public void delete(Integer id) {
-    T temp = this.findOne(id);
-    factory.getCurrentSession().remove(temp);
-  }
+  public Integer delete(Integer id) {
+    T data = findById(id);
 
-  protected CriteriaQuery<T> getCriteriaQuery(Session session) {
-    return session.getCriteriaBuilder().createQuery(type);
+    if (data != null) {
+      data.setDeletedAt(new Date());
+      saveOrUpdate(data);
+    }
+
+    return id;
   }
 
 }

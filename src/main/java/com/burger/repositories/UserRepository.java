@@ -1,14 +1,11 @@
 package com.burger.repositories;
 
-import java.util.List;
-
 import org.hibernate.Session;
 
 import com.burger.entities.User;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 public class UserRepository extends BaseRepository<User> {
@@ -27,20 +24,28 @@ public class UserRepository extends BaseRepository<User> {
   public User findByUserName(String username) {
     Session session = factory.getCurrentSession();
     CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-    CriteriaQuery<User> criteriaQuery = getCriteriaQuery(session);
+    CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(type);
     Root<User> root = criteriaQuery.from(type);
     criteriaQuery.select(root);
 
-    Predicate equal = criteriaBuilder.equal(root.get("username"), username);
-    criteriaQuery.where(equal);
+    criteriaQuery.where(criteriaBuilder.equal(root.get("username"), username));
 
-    List<User> users = session.createQuery(criteriaQuery).getResultList();
+    return session.createQuery(criteriaQuery).uniqueResult();
+  }
 
-    if (users.size() != 0) {
-      return users.get(0);
-    }
+  public User findByUserNameOrEmail(String username, String email) {
+    Session session = factory.getCurrentSession();
+    CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+    CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(type);
+    Root<User> root = criteriaQuery.from(type);
+    criteriaQuery.select(root);
 
-    return null;
+    criteriaQuery.where(
+        criteriaBuilder.or(
+            criteriaBuilder.equal(root.get("username"), username),
+            criteriaBuilder.equal(root.get("email"), email)));
+
+    return session.createQuery(criteriaQuery).uniqueResult();
   }
 
 }

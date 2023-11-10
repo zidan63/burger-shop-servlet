@@ -14,36 +14,23 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "User")
+@Table(name = "Category")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "DeletedAt IS NULL")
-public class User extends BaseEntity {
+public class CartItem extends BaseEntity {
 
   @Basic
-  @Column(name = "FullName", nullable = false, length = 100)
-  private String fullName;
-
-  @Basic
-  @Column(name = "UserName", nullable = false, length = 30)
-  private String username;
-
-  @Basic
-  @Column(name = "Password", nullable = false)
-  private String password;
-
-  @Basic
-  @Column(name = "Email", nullable = false, length = 100)
-  private String email;
-
-  @Basic
-  @Column(name = "OTP")
-  private String OTP;
+  @Column(name = "Amount", nullable = false)
+  Integer amount;
 
   @ManyToOne
-  @JoinColumn(name = "RoleId")
-  private Role role;
+  @JoinColumn(name = "UserId")
+  User user;
 
+  @ManyToOne
+  @JoinColumn(name = "ProductId")
+  Product product;
 }

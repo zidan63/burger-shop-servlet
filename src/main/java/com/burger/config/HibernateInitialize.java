@@ -5,21 +5,22 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import com.burger.entities.*;
+import com.burger.entities.Permission;
+import com.burger.entities.Role;
+import com.burger.entities.User;
 
 public class HibernateInitialize {
   private static SessionFactory sessionFactory;
 
-  private static final List<Class<?>> classes = List.of(User.class);
+  private static final List<Class<?>> classes = List.of(User.class, Role.class, Permission.class);
 
   public static SessionFactory getSessionFactory() {
     if (sessionFactory == null) {
       try {
         Configuration configuration = new Configuration();
-        configuration.setProperty(Environment.HBM2DDL_AUTO, "update");
+
         classes.forEach(configuration::addAnnotatedClass);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()

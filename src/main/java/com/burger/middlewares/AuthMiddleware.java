@@ -3,6 +3,7 @@ package com.burger.middlewares;
 import com.burger.entities.User;
 import com.burger.exception.BaseException;
 import com.burger.exception.UnauthorizedException;
+import com.burger.others.PayloadToken;
 import com.burger.others.RequestAuth;
 import com.burger.services.AuthService;
 import com.burger.services.UserService;
@@ -21,9 +22,9 @@ public class AuthMiddleware extends BaseMiddleware {
 
       try {
         String payloadJson = AuthService.getInstance().verifyAccessToken(accessToken);
-        User userPayload = gson.fromJson(payloadJson, User.class);
+        PayloadToken userPayload = gson.fromJson(payloadJson, PayloadToken.class);
 
-        User user = UserService.getInstance().findOne(userPayload.getId());
+        User user = UserService.getInstance().findById(userPayload.getId());
 
         if (user == null) {
           throw new UnauthorizedException("Vui lòng đăng nhập!");

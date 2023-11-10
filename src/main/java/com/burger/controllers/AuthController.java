@@ -13,7 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet({ "/auth/login", "/auth/register" })
+@WebServlet({ "/auth/login", "/auth/register", "/auth/forget", "/auth/otp" })
 public class AuthController extends BaseController {
   @Override
   protected void doPost(RequestAuth req, HttpServletResponse resp)
@@ -35,16 +35,47 @@ public class AuthController extends BaseController {
           break;
 
         case "register":
+          register(resp, user);
           break;
+
+        case "forget":
+          forget(resp, user);
+          break;
+
+        case "otp":
+          otp(resp, user);
+          break;
+
       }
     }
   }
 
   private void login(HttpServletResponse resp, User user)
       throws BaseException, IOException {
-
     AccessToken accessToken = AuthService.getInstance().login(user.getUsername(), user.getPassword());
     resp.getWriter().write(gson.toJson(accessToken));
+  }
 
+  private void register(HttpServletResponse resp, User user)
+      throws BaseException, IOException {
+
+    User result = AuthService.getInstance().register(user);
+    resp.getWriter().write(gson.toJson(result));
+
+  }
+
+  private void forget(HttpServletResponse resp, User user)
+      throws BaseException, IOException {
+
+    AuthService.getInstance().forget(user);
+    resp.getWriter().write(gson.toJson("Kiểm tra email"));
+
+  }
+
+  private void otp(HttpServletResponse resp, User user)
+      throws BaseException, IOException {
+
+    AuthService.getInstance().otp(user);
+    resp.getWriter().write(gson.toJson("Đã đổi mật khẩu thành công"));
   }
 }

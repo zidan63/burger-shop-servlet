@@ -40,7 +40,7 @@ public class Bill extends BaseEntity {
   @JoinColumn(name = "UserId")
   User user;
 
-  @OneToMany(mappedBy = "BillId", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<BillDetail> billDetails = new HashSet<>();
 
 }

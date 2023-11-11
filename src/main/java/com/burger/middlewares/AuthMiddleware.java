@@ -16,6 +16,10 @@ public class AuthMiddleware extends BaseMiddleware {
   public void handle(RequestAuth req, HttpServletResponse resp) throws BaseException {
     String authorizationHeader = req.getHeader("Authorization");
 
+    if (req.getPermissionCode().size() > 0) {
+      return;
+    }
+
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
       String accessToken = authorizationHeader.substring(7); // Bỏ qua "Bearer "
       logger.info("accessToken: " + accessToken);

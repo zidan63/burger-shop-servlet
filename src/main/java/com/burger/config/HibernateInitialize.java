@@ -7,14 +7,13 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import com.burger.entities.Permission;
-import com.burger.entities.Role;
-import com.burger.entities.User;
+import com.burger.entities.*;
 
 public class HibernateInitialize {
   private static SessionFactory sessionFactory;
 
-  private static final List<Class<?>> classes = List.of(User.class, Role.class, Permission.class);
+  private static final List<Class<?>> classes = List.of(User.class, Role.class, Permission.class, Category.class,
+      Suplier.class, Color.class, Product.class, Bill.class, BillDetail.class, CartItem.class);
 
   public static SessionFactory getSessionFactory() {
     if (sessionFactory == null) {

@@ -1,5 +1,6 @@
 package com.burger.repositories;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,8 +9,15 @@ import org.hibernate.SessionFactory;
 
 import com.burger.config.HibernateInitialize;
 import com.burger.entities.BaseEntity;
-import com.burger.others.SearchMap;
+import com.burger.enums.SearchAboutType;
+import com.burger.enums.SearchFieldType;
+import com.burger.enums.SearchType;
+import com.burger.others.Search;
+import com.burger.others.SearchAbout;
+import com.burger.others.SearchField;
+import com.burger.others.SearchResult;
 
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
@@ -48,31 +56,99 @@ public class BaseRepository<T extends BaseEntity> {
     return session.createQuery(criteriaQuery).getResultList();
   }
 
-  public List<T> findByFields(List<SearchMap> searchMaps) {
+  public SearchResult<T> findByFields(Search search, List<SearchField> searchFields, List<SearchAbout> searchAbouts) {
+
     Session session = factory.getCurrentSession();
     CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
     CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(type);
     Root<T> root = criteriaQuery.from(type);
     criteriaQuery.select(root);
 
-    for (SearchMap searchMap : searchMaps) {
-      if (searchMap.getField() instanceof String) {
+    List<Predicate> predicates = new ArrayList<>();
 
-        Path<String> fieldPath = root.get(searchMap.getField());
-        String value = searchMap.getValue().toString();
-        Predicate like = criteriaBuilder.like(fieldPath, value);
+    for (SearchField searchField : searchFields) {
+      Predicate predicate;
 
-        criteriaQuery.where(criteriaBuilder.and(like));
-      } else {
-        Path<String> fieldPath = root.get(searchMap.getField());
-        Object value = searchMap.getValue();
-        Predicate equal = criteriaBuilder.equal(fieldPath, value);
-
-        criteriaQuery.where(criteriaBuilder.and(equal));
+      if (searchField.isEmpty()) {
+        continue;
       }
+
+      if (searchField.getType() == SearchFieldType.STRING) {
+        Path<String> fieldPath = root.get(searchField.getField());
+        String value = searchField.getValueString();
+        predicate = criteriaBuilder.like(fieldPath, value);
+      } else if (searchField.getType() == SearchFieldType.NUMBER) {
+        Path<Integer> fieldPath = root.get(searchField.getField());
+        Integer value = searchField.getValueNumber();
+        predicate = criteriaBuilder.equal(fieldPath, value);
+      } else {
+        Object[] values = searchField.getValuesNumber();
+        predicate = root.get(searchField.getField()).in(values);
+      }
+
+      predicates.add(predicate);
     }
 
-    return session.createQuery(criteriaQuery).getResultList();
+    for (SearchAbout searchAbout : searchAbouts) {
+
+      if (searchAbout.getType() == SearchAboutType.DATE) {
+
+        if (searchAbout.getFromDate() != null && searchAbout.getToDate() != null) {
+
+          predicates.add(criteriaBuilder
+              .between(
+                  root.get(searchAbout.getField()),
+                  searchAbout.getFromDate(), searchAbout.getToDate()));
+
+        } else if (searchAbout.getFromDate() != null) {
+
+          predicates.add(criteriaBuilder
+              .greaterThanOrEqualTo(
+                  root.get(searchAbout.getField()),
+                  searchAbout.getFromDate()));
+
+        } else if (searchAbout.getToDate() != null) {
+
+          predicates.add(criteriaBuilder
+              .lessThanOrEqualTo(
+                  root.get(searchAbout.getField()),
+                  searchAbout.getToDate()));
+
+        }
+
+      } else {
+
+        if (searchAbout.getFromInteger() != null)
+          predicates.add(criteriaBuilder
+              .greaterThanOrEqualTo(
+                  root.get(searchAbout.getField()),
+                  searchAbout.getFromInteger()));
+
+        if (searchAbout.getFromInteger() != null)
+          predicates.add(criteriaBuilder
+              .greaterThanOrEqualTo(
+                  root.get(searchAbout.getField()),
+                  searchAbout.getToInteger()));
+      }
+
+    }
+
+    int start = (search.getPage() - 1) * search.getPageSize();
+
+    if (search.getType() == SearchType.ADVANCED && predicates.size() > 0)
+      criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+    else if (predicates.size() > 0)
+      criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+
+    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+
+    TypedQuery<T> query = session.createQuery(criteriaQuery);
+    Long totalRecord = query.getResultStream().distinct().count();
+
+    query.setFirstResult(start);
+    query.setMaxResults(search.getPageSize());
+
+    return new SearchResult<>(totalRecord, search.getPage(), query.getResultList());
   }
 
   public T saveOrUpdate(T data) {

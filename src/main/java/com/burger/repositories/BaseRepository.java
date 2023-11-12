@@ -74,14 +74,28 @@ public class BaseRepository<T extends BaseEntity> {
       }
 
       if (searchField.getType() == SearchFieldType.STRING) {
+
+        if (searchField.getValueString() == null) {
+          continue;
+        }
+
         Path<String> fieldPath = root.get(searchField.getField());
         String value = searchField.getValueString();
-        predicate = criteriaBuilder.like(fieldPath, value);
+        predicate = criteriaBuilder.like(fieldPath, "%" + value + "%");
       } else if (searchField.getType() == SearchFieldType.NUMBER) {
+
+        if (searchField.getValueNumber() == null) {
+          continue;
+        }
+
         Path<Integer> fieldPath = root.get(searchField.getField());
         Integer value = searchField.getValueNumber();
         predicate = criteriaBuilder.equal(fieldPath, value);
       } else {
+        if (searchField.getValuesNumber() == null) {
+          continue;
+        }
+
         Object[] values = searchField.getValuesNumber();
         predicate = root.get(searchField.getField()).in(values);
       }
@@ -118,13 +132,18 @@ public class BaseRepository<T extends BaseEntity> {
 
       } else {
 
-        if (searchAbout.getFromInteger() != null)
+        if (searchAbout.getFromDate() != null && searchAbout.getToDate() != null) {
+          predicates.add(criteriaBuilder.between(
+              root.get(searchAbout.getField()),
+              searchAbout.getFromInteger(), searchAbout.getToInteger()));
+
+        } else if (searchAbout.getFromInteger() != null)
           predicates.add(criteriaBuilder
               .greaterThanOrEqualTo(
                   root.get(searchAbout.getField()),
                   searchAbout.getFromInteger()));
 
-        if (searchAbout.getFromInteger() != null)
+        else if (searchAbout.getFromInteger() != null)
           predicates.add(criteriaBuilder
               .greaterThanOrEqualTo(
                   root.get(searchAbout.getField()),
@@ -140,7 +159,7 @@ public class BaseRepository<T extends BaseEntity> {
     else if (predicates.size() > 0)
       criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
 
-    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+    criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updatedAt")));
 
     TypedQuery<T> query = session.createQuery(criteriaQuery);
     Long totalRecord = query.getResultStream().distinct().count();

@@ -3,7 +3,7 @@ package com.burger.services;
 import java.util.List;
 import java.util.Map;
 
-import com.burger.entities.Role;
+import com.burger.entities.Color;
 import com.burger.enums.SearchAboutType;
 import com.burger.enums.SearchFieldType;
 import com.burger.exception.BaseException;
@@ -11,23 +11,22 @@ import com.burger.others.Search;
 import com.burger.others.SearchAbout;
 import com.burger.others.SearchField;
 import com.burger.others.SearchResult;
-import com.burger.repositories.RoleRepository;
+import com.burger.repositories.ColorRepository;
 
-public class RoleService extends BaseService<Role, RoleRepository> {
+public class ColorService extends BaseService<Color, ColorRepository> {
+  private static ColorService instance;
 
-  private static RoleService instance;
-
-  public static RoleService getInstance() {
+  public static ColorService getInstance() {
     if (instance == null)
-      instance = new RoleService();
+      instance = new ColorService();
     return instance;
   }
 
-  private RoleService() {
-    super(RoleRepository.getInstance());
+  private ColorService() {
+    super(ColorRepository.getInstance());
   }
 
-  public SearchResult<Role> findByFields(Search search, Map<String, String[]> map) throws BaseException {
+  public SearchResult<Color> findByFields(Search search, Map<String, String[]> map) throws BaseException {
 
     List<SearchField> searchFields = List.of(
         SearchField.builder()

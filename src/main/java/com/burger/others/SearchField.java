@@ -23,13 +23,16 @@ public class SearchField {
 
     public String getValueString() {
         if (values != null && values.length > 0) {
-            return values[0];
+            return values[0].isEmpty() ? null : values[0];
         }
         return null;
     }
 
     public Integer getValueNumber() {
-        return Integer.valueOf(values[0]);
+        if (values != null && values.length > 0) {
+            return values[0].isEmpty() ? null : Integer.valueOf(values[0]);
+        }
+        return null;
     }
 
     public String[] getValuesString() {
@@ -40,7 +43,7 @@ public class SearchField {
         Integer[] integerArray = new Integer[values.length];
 
         for (int i = 0; i < values.length; i++) {
-            integerArray[i] = Integer.valueOf(values[i]);
+            integerArray[i] = values[i].isEmpty() ? 0 : Integer.valueOf(values[i]);
         }
 
         return integerArray;

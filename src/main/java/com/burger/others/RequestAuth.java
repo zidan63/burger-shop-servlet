@@ -27,8 +27,28 @@ public class RequestAuth extends HttpServletRequestWrapper {
     return permissionCodesPerMethod.get(this.getMethod());
   }
 
-  public void putPermissionCode(List<PermissionCode> permissionCodes) {
-    permissionCodesPerMethod.put(this.getMethod(), permissionCodes);
+  public void putPermissionCode(String methodName, List<PermissionCode> permissionCodes) {
+    String method = "GET";
+    switch (methodName) {
+      case "doGet":
+        method = "GET";
+        break;
+
+      case "doPost":
+        method = "POST";
+        break;
+
+      case "doPut":
+        method = "PUT";
+        break;
+
+      case "doDelete":
+        method = "DELETE";
+        break;
+    }
+
+    permissionCodesPerMethod.put(method, permissionCodes);
+
   }
 
 }

@@ -30,22 +30,17 @@ public class UserService extends BaseService<User, UserRepository> {
     super(UserRepository.getInstance());
   }
 
-  public User findByUserName(String username) {
+  public User findByUserName(String username) throws BaseException {
     return transaction.doInTransaction(() -> repository.findByUserName(username));
   }
 
-  public User findByUserNameOrEmail(String username, String email) {
+  public User findByUserNameOrEmail(String username, String email) throws BaseException {
     return transaction.doInTransaction(() -> repository.findByUserNameOrEmail(username, email));
   }
 
-  public SearchResult<User> findByFields(Search search, Map<String, String[]> map) {
+  public SearchResult<User> findByFields(Search search, Map<String, String[]> map) throws BaseException {
 
     List<SearchField> searchFields = List.of(
-        SearchField.builder()
-            .field("id")
-            .values(map.get("id"))
-            .type(SearchFieldType.NUMBER)
-            .build(),
         SearchField.builder()
             .field("fullName")
             .values(map.get("fullName"))
@@ -107,7 +102,7 @@ public class UserService extends BaseService<User, UserRepository> {
 
     }
 
-    if (user.getPassword() != null) {
+    if (user.getPassword() != null && !user.getPassword().isEmpty()) {
       String salt = BCrypt.gensalt(10);
       String hashPass = BCrypt.hashpw(user.getPassword(), salt);
       user.setPassword(hashPass);

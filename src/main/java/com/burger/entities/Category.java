@@ -19,6 +19,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Where(clause = "DeletedAt IS NULL")
 public class Category extends BaseEntity {
+
+  @Basic
+  @Column(name = "Code", nullable = false)
+  String code;
+
   @Basic
   @Column(name = "Name", nullable = false)
   String name;

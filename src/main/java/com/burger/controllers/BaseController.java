@@ -39,7 +39,7 @@ public abstract class BaseController extends HttpServlet {
     for (Method method : this.getClass().getDeclaredMethods()) {
       if (method.isAnnotationPresent(RequirePermissions.class)) {
         RequirePermissions requirePermissions = method.getAnnotation(RequirePermissions.class);
-        req.putPermissionCode(Arrays.asList(requirePermissions.value()));
+        req.putPermissionCode(method.getName(), Arrays.asList(requirePermissions.value()));
       }
     }
 

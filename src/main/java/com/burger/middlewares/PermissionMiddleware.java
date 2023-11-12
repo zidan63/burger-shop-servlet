@@ -17,11 +17,12 @@ public class PermissionMiddleware extends BaseMiddleware {
 
   @Override
   public void handle(RequestAuth req, HttpServletResponse resp) throws BaseException {
-    User user = req.getUserCurrent();
-    if (req.getUserCurrent() == null) {
-      throw new ForbiddenException("Tài khoản không có quyền!");
+
+    if (req.getPermissionCode() == null) {
+      return;
     }
 
+    User user = req.getUserCurrent();
     try {
       Set<Permission> userPermissions = user.getRole().getPermissions();
 

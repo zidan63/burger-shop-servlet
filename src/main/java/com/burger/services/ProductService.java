@@ -6,6 +6,7 @@ import java.util.Map;
 import com.burger.entities.Product;
 import com.burger.enums.SearchAboutType;
 import com.burger.enums.SearchFieldType;
+import com.burger.exception.BaseException;
 import com.burger.others.Search;
 import com.burger.others.SearchAbout;
 import com.burger.others.SearchField;
@@ -25,7 +26,7 @@ public class ProductService extends BaseService<Product, ProductRepository> {
     super(ProductRepository.getInstance());
   }
 
-  public SearchResult<Product> findByFields(Search search, Map<String, String[]> map) {
+  public SearchResult<Product> findByFields(Search search, Map<String, String[]> map) throws BaseException {
 
     List<SearchField> searchFields = List.of(
         SearchField.builder()
@@ -41,6 +42,11 @@ public class ProductService extends BaseService<Product, ProductRepository> {
         SearchField.builder()
             .field("category")
             .values(map.get("categoryId"))
+            .type(SearchFieldType.ARRAY)
+            .build(),
+        SearchField.builder()
+            .field("suplier")
+            .values(map.get("suplierId"))
             .type(SearchFieldType.ARRAY)
             .build());
 

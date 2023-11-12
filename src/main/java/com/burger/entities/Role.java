@@ -35,10 +35,6 @@ public class Role extends BaseEntity {
   @Column(name = "Code", nullable = false)
   String code;
 
-  @Basic
-  @Column(name = "Description", nullable = false)
-  String description;
-
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinTable(name = "RoleDetail", joinColumns = {
       @JoinColumn(name = "RoleId")

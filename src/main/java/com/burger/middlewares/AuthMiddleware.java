@@ -16,7 +16,7 @@ public class AuthMiddleware extends BaseMiddleware {
   public void handle(RequestAuth req, HttpServletResponse resp) throws BaseException {
     String authorizationHeader = req.getHeader("Authorization");
 
-    if (req.getPermissionCode().size() > 0) {
+    if (req.getPermissionCode() == null) {
       return;
     }
 

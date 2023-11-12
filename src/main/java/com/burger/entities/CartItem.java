@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Category")
+@Table(name = "CartItem")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor

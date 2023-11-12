@@ -9,6 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.burger.exception.BadRequestException;
+import com.burger.exception.BaseException;
 import com.burger.others.SearchResult;
 
 public class TransactionManager<T> {
@@ -20,7 +22,7 @@ public class TransactionManager<T> {
     this.factory = HibernateInitialize.getSessionFactory();
   }
 
-  public List<T> doInTransaction(GetList<T> test) {
+  public List<T> doInTransaction(GetList<T> test) throws BaseException {
     Transaction transaction = null;
     Session session = factory.getCurrentSession();
     try {
@@ -32,15 +34,15 @@ public class TransactionManager<T> {
       if (transaction != null)
         transaction.rollback();
       logger.error("", e);
+      throw new BadRequestException(e.toString());
 
     } finally {
       if (session != null)
         session.close();
     }
-    return null;
   }
 
-  public SearchResult<T> doInTransaction(GetSearchResult<T> test) {
+  public SearchResult<T> doInTransaction(GetSearchResult<T> test) throws BaseException {
     Transaction transaction = null;
     Session session = factory.getCurrentSession();
     try {
@@ -52,15 +54,16 @@ public class TransactionManager<T> {
       if (transaction != null)
         transaction.rollback();
       logger.error("", e);
+      throw new BadRequestException(e.toString());
 
     } finally {
       if (session != null)
         session.close();
     }
-    return null;
+
   }
 
-  public T doInTransaction(Get<T> test) {
+  public T doInTransaction(Get<T> test) throws BaseException {
     Transaction transaction = null;
     Session session = null;
     try {
@@ -73,15 +76,16 @@ public class TransactionManager<T> {
       if (transaction != null)
         transaction.rollback();
       logger.error("", e);
+      throw new BadRequestException(e.toString());
 
     } finally {
       if (session != null)
         session.close();
     }
-    return null;
+
   }
 
-  public void doInTransaction(IExecute execute) {
+  public void doInTransaction(IExecute execute) throws BaseException {
     Transaction transaction = null;
     Session session = null;
     try {
@@ -93,6 +97,7 @@ public class TransactionManager<T> {
       if (transaction != null)
         transaction.rollback();
       logger.error("", e);
+      throw new BadRequestException(e.toString());
 
     } finally {
       if (session != null)

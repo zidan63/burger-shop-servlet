@@ -16,11 +16,11 @@ public class BaseService<T extends BaseEntity, R extends BaseRepository<T>> {
     this.repository = repository;
   }
 
-  public List<T> findAll() {
+  public List<T> findAll() throws BaseException {
     return (List<T>) transaction.doInTransaction(repository::findAll);
   }
 
-  public T findById(Integer id) {
+  public T findById(Integer id) throws BaseException {
     return transaction.doInTransaction(() -> repository.findById(id));
   }
 
@@ -28,7 +28,7 @@ public class BaseService<T extends BaseEntity, R extends BaseRepository<T>> {
     return transaction.doInTransaction(() -> repository.saveOrUpdate(data));
   }
 
-  public void delete(Integer id) {
+  public void delete(Integer id) throws BaseException {
     transaction.doInTransaction(() -> repository.delete(id));
   }
 

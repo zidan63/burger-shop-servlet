@@ -17,6 +17,7 @@ import com.burger.middlewares.BaseMiddleware;
 import com.burger.others.ErrorCustom;
 import com.burger.others.RequestAuth;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -26,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public abstract class BaseController extends HttpServlet {
 
   protected final Logger logger = LogManager.getLogger(this);
-  protected final Gson gson = new Gson();
+  protected final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
 
   private static final String METHOD_GET = "GET";
   private static final String METHOD_POST = "POST";
@@ -59,6 +60,9 @@ public abstract class BaseController extends HttpServlet {
       throws ServletException, IOException {
     resp.setContentType("application/json");
     resp.setCharacterEncoding("utf-8");
+    resp.setHeader("Access-Control-Allow-Origin", "*");
+    resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    resp.setHeader("Access-Control-Allow-Headers", "*");
 
     RequestAuth requestAuth = new RequestAuth(req);
 
@@ -75,6 +79,10 @@ public abstract class BaseController extends HttpServlet {
         doPut(requestAuth, resp);
       } else if (method.equals(METHOD_DELETE)) {
         doDelete(requestAuth, resp);
+      } else if (req.getMethod().equalsIgnoreCase("OPTIONS")) {
+
+        resp.setStatus(HttpServletResponse.SC_OK);
+        return;
       } else {
         doElse(requestAuth, resp);
       }

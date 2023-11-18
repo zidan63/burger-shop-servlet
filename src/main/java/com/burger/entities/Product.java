@@ -16,16 +16,19 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "Product")
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = { "user", "category", "suplier", "colors" })
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Where(clause = "DeletedAt IS NULL")
 public class Product extends BaseEntity {
   @Basic
@@ -44,6 +47,14 @@ public class Product extends BaseEntity {
   @Column(name = "Stock", nullable = false)
   Integer stock;
 
+  @Basic
+  @Column(name = "Description")
+  String description;
+
+  @Basic
+  @Column(name = "ImageName")
+  String imageName;
+
   @ManyToOne
   @JoinColumn(name = "UserId")
   private User user;
@@ -61,6 +72,7 @@ public class Product extends BaseEntity {
       @JoinColumn(name = "ProductId")
   }, inverseJoinColumns = {
       @JoinColumn(name = "ColorId") })
+  @Builder.Default
   private Set<Color> colors = new HashSet<>();
 
 }

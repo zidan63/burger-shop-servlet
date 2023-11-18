@@ -12,13 +12,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "User")
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = { "role" })
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Where(clause = "DeletedAt IS NULL")
 public class User extends BaseEntity {
 

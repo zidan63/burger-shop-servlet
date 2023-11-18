@@ -13,18 +13,22 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class BaseEntity implements Serializable {
+@SuperBuilder
+public class BaseEntity implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "Id")
+  @Builder.Default
   protected Integer id = null;
 
   @Temporal(TemporalType.TIMESTAMP)

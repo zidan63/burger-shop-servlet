@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "BillDetail")
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = { "product", "bill" })
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "DeletedAt IS NULL")

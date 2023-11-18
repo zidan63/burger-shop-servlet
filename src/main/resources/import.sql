@@ -2,8 +2,7 @@ INSERT INTO Permission (Code, CreatedAt, UpdatedAt) VALUES ('READ_INFO', CURRENT
 
 INSERT INTO Role (Code, Name,  CreatedAt, UpdatedAt) VALUES ('ADMIN', 'Quan tri vien',  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), ('SALER', 'Nguoi ban',  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), ('CUSTOMER', 'Khach hang',  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-INSERT INTO RoleDetail (RoleId, PermissionId) VALUES 
-(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10),(1, 11), (1, 12), (1, 13), (1, 14), (1, 15), (1, 16), (1, 17), (1, 18), (1, 19), (1, 20),(1, 21), (1, 22), (1, 23), (1, 24), (1, 25), (1, 26),(1, 27), (1, 28), (1, 29), (1, 30),(1, 31), (1, 32), (1, 33), (1, 34), (1, 35), (1, 36), (2, 1), (2, 2), (2, 3), (2, 4), (2, 13), (2, 14), (2, 15), (2, 16),  (3, 1), (3, 2), (3, 3), (3, 4); 
+INSERT INTO RoleDetail (RoleId, PermissionId) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10),(1, 11), (1, 12), (1, 13), (1, 14), (1, 15), (1, 16), (1, 17), (1, 18), (1, 19), (1, 20),(1, 21), (1, 22), (1, 23), (1, 24), (1, 25), (1, 26),(1, 27), (1, 28), (1, 29), (1, 30),(1, 31), (1, 32), (1, 33), (1, 34), (1, 35), (1, 36), (2, 1), (2, 2), (2, 3), (2, 4), (2, 13), (2, 14), (2, 15), (2, 16),  (3, 1), (3, 2), (3, 3), (3, 4); 
 
 
 

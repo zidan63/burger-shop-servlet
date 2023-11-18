@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import com.burger.entities.User;
 import com.burger.exception.BaseException;
-import com.burger.others.AccessToken;
+import com.burger.others.LoginPayload;
 import com.burger.others.RequestAuth;
 import com.burger.services.AuthService;
 
@@ -52,8 +52,8 @@ public class AuthController extends BaseController {
 
   private void login(HttpServletResponse resp, User user)
       throws BaseException, IOException {
-    AccessToken accessToken = AuthService.getInstance().login(user.getUsername(), user.getPassword());
-    resp.getWriter().write(gson.toJson(accessToken));
+    LoginPayload result = AuthService.getInstance().login(user.getUsername(), user.getPassword());
+    resp.getWriter().write(gson.toJson(result));
   }
 
   private void register(HttpServletResponse resp, User user)

@@ -17,7 +17,7 @@ import com.burger.entities.User;
 import com.burger.exception.BaseException;
 import com.burger.exception.ForbiddenException;
 import com.burger.exception.NotFoundException;
-import com.burger.others.AccessToken;
+import com.burger.others.LoginPayload;
 import com.burger.others.PayloadToken;
 import com.google.gson.Gson;
 
@@ -36,14 +36,14 @@ public class AuthService {
   private AuthService() {
   }
 
-  public AccessToken genarateAccessToken(User user) {
+  public String genarateAccessToken(User user) {
 
     PayloadToken payloadToken = new PayloadToken(user.getId());
 
     String accessToken = JWT.create()
         .withPayload(gson.toJson(payloadToken))
         .sign(Algorithm.HMAC256("SECRET"));
-    return new AccessToken(accessToken);
+    return accessToken;
   }
 
   public String verifyAccessToken(String accessToken) {
@@ -56,7 +56,7 @@ public class AuthService {
     return StringUtils.newStringUtf8(Base64.decodeBase64(base64));
   }
 
-  public AccessToken login(String username, String password) throws BaseException {
+  public LoginPayload login(String username, String password) throws BaseException {
 
     User user = UserService.getInstance().findByUserNameOrEmail(username, username);
 
@@ -69,9 +69,9 @@ public class AuthService {
       throw new NotFoundException("Tài khoản hoặc mật khẩu không chính xác!");
     }
 
-    AccessToken accessToken = genarateAccessToken(user);
+    String accessToken = genarateAccessToken(user);
 
-    return accessToken;
+    return new LoginPayload(accessToken, user);
   }
 
   public User register(User user) throws BaseException {

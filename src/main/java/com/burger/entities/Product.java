@@ -25,7 +25,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "Product")
 @Data
-@EqualsAndHashCode(callSuper = false, exclude = { "user", "category", "suplier", "colors" })
+@EqualsAndHashCode(callSuper = false, exclude = { "user", "category", "supplier", "colors" })
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -64,8 +64,8 @@ public class Product extends BaseEntity {
   private Category category;
 
   @ManyToOne
-  @JoinColumn(name = "SuplierId")
-  private Suplier suplier;
+  @JoinColumn(name = "SupplierId")
+  private Supplier supplier;
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinTable(name = "ColorDetail", joinColumns = {

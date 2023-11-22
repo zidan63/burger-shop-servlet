@@ -14,13 +14,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Suplier")
+@Table(name = "Supplier")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "DeletedAt IS NULL")
-public class Suplier extends BaseEntity {
+public class Supplier extends BaseEntity {
 
   @Basic
   @Column(name = "Code", nullable = false)

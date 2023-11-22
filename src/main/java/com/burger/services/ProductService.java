@@ -45,8 +45,8 @@ public class ProductService extends BaseService<Product, ProductRepository> {
             .type(SearchFieldType.ARRAY)
             .build(),
         SearchField.builder()
-            .field("suplier")
-            .values(map.get("suplierId"))
+            .field("supplier")
+            .values(map.get("supplierId"))
             .type(SearchFieldType.ARRAY)
             .build());
 

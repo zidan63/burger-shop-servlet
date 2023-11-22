@@ -13,7 +13,7 @@ public class HibernateInitialize {
   private static SessionFactory sessionFactory;
 
   private static final List<Class<?>> classes = List.of(User.class, Role.class, Permission.class, Category.class,
-      Suplier.class, Color.class, Product.class, Bill.class, BillDetail.class, CartItem.class, Address.class);
+      Supplier.class, Color.class, Product.class, Bill.class, BillDetail.class, CartItem.class, Address.class);
 
   public static SessionFactory getSessionFactory() {
     if (sessionFactory == null) {

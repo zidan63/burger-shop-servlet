@@ -3,7 +3,7 @@ package com.burger.services;
 import java.util.List;
 import java.util.Map;
 
-import com.burger.entities.Suplier;
+import com.burger.entities.Supplier;
 import com.burger.enums.SearchAboutType;
 import com.burger.enums.SearchFieldType;
 import com.burger.exception.BaseException;
@@ -11,22 +11,22 @@ import com.burger.others.Search;
 import com.burger.others.SearchAbout;
 import com.burger.others.SearchField;
 import com.burger.others.SearchResult;
-import com.burger.repositories.SuplierRepository;
+import com.burger.repositories.SupplierRepository;
 
-public class SuplierService extends BaseService<Suplier, SuplierRepository> {
-  private static SuplierService instance;
+public class SupplierService extends BaseService<Supplier, SupplierRepository> {
+  private static SupplierService instance;
 
-  public static SuplierService getInstance() {
+  public static SupplierService getInstance() {
     if (instance == null)
-      instance = new SuplierService();
+      instance = new SupplierService();
     return instance;
   }
 
-  private SuplierService() {
-    super(SuplierRepository.getInstance());
+  private SupplierService() {
+    super(SupplierRepository.getInstance());
   }
 
-  public SearchResult<Suplier> findByFields(Search search, Map<String, String[]> map) throws BaseException {
+  public SearchResult<Supplier> findByFields(Search search, Map<String, String[]> map) throws BaseException {
 
     List<SearchField> searchFields = List.of(
         SearchField.builder()

@@ -1,5 +1,8 @@
 package com.burger.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Basic;
@@ -18,6 +21,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "DeletedAt IS NULL")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@DynamicUpdate
 public class Address extends BaseEntity {
   @Basic
   @Column(name = "Name", nullable = false)

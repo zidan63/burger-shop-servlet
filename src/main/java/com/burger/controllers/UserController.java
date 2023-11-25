@@ -53,7 +53,13 @@ public class UserController extends BaseController {
   protected void doPut(RequestAuth req, HttpServletResponse resp)
       throws ServletException, IOException {
     BufferedReader reader = req.getReader();
-    User user = gson.fromJson(reader, User.class);
+    System.out.println("asdsadsad");
+    User mapped = gson.fromJson(reader, User.class);
+    User user = req.getUserCurrent();
+
+    user.setFullName(mapped.getFullName());
+    user.setEmail(mapped.getEmail());
+    System.out.println("Update fullname: "+mapped.getFullName());
     User result = UserService.getInstance().saveOrUpdate(user);
     resp.getWriter().write(gson.toJson(result));
   }

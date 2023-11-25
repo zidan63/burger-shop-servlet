@@ -1,5 +1,13 @@
 package com.burger.entities;
 
+import com.burger.entities.serializer.BillDetailSerializer;
+import com.burger.entities.serializer.UserSerializer;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Basic;
@@ -21,7 +29,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
+@DynamicUpdate
 @Where(clause = "DeletedAt IS NULL")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User extends BaseEntity {
 
   @Basic
@@ -46,6 +56,7 @@ public class User extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "RoleId")
+  @JsonManagedReference
   private Role role;
 
 }

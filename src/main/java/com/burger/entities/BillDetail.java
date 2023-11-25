@@ -1,17 +1,20 @@
 package com.burger.entities;
 
+import com.burger.entities.serializer.BillDetailSerializer;
+import com.burger.entities.serializer.BillSerializer;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.gson.annotations.Expose;
+import jakarta.persistence.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "BillDetail")
@@ -20,6 +23,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "DeletedAt IS NULL")
+@DynamicUpdate
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class BillDetail extends BaseEntity {
 
   @Basic
@@ -32,9 +37,14 @@ public class BillDetail extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "ProductId")
+  @JsonManagedReference
   Product product;
 
   @ManyToOne
   @JoinColumn(name = "BillId")
+//  @JsonBackReference
+  @JsonBackReference
   Bill bill;
+
+
 }

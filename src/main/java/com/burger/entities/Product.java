@@ -3,6 +3,12 @@ package com.burger.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.burger.entities.serializer.ProductSerializer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Basic;
@@ -30,6 +36,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @Where(clause = "DeletedAt IS NULL")
+//@JsonSerialize(using = ProductSerializer.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product extends BaseEntity {
   @Basic
   @Column(name = "Name", nullable = false)
@@ -57,14 +65,17 @@ public class Product extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "UserId")
+  @JsonManagedReference
   private User user;
 
   @ManyToOne
   @JoinColumn(name = "CategoryId")
+  @JsonManagedReference
   private Category category;
 
   @ManyToOne
   @JoinColumn(name = "SupplierId")
+  @JsonManagedReference
   private Supplier supplier;
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -73,6 +84,7 @@ public class Product extends BaseEntity {
   }, inverseJoinColumns = {
       @JoinColumn(name = "ColorId") })
   @Builder.Default
+  @JsonManagedReference
   private Set<Color> colors = new HashSet<>();
 
 }

@@ -1,5 +1,7 @@
 package com.burger.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Basic;
@@ -28,9 +30,11 @@ public class CartItem extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "UserId")
+  @JsonManagedReference
   User user;
 
   @ManyToOne
   @JoinColumn(name = "ProductId")
+  @JsonManagedReference
   Product product;
 }

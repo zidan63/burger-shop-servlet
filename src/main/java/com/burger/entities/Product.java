@@ -31,13 +31,14 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "Product")
 @Data
-@EqualsAndHashCode(callSuper = false, exclude = { "user", "category", "supplier", "colors" })
+@EqualsAndHashCode(callSuper = false, exclude = { "user", "category", "supplier", "toppings" })
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @Where(clause = "DeletedAt IS NULL")
-//@JsonSerialize(using = ProductSerializer.class)
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonSerialize(using = ProductSerializer.class)
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class Product extends BaseEntity {
   @Basic
   @Column(name = "Name", nullable = false)
@@ -79,12 +80,12 @@ public class Product extends BaseEntity {
   private Supplier supplier;
 
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinTable(name = "ColorDetail", joinColumns = {
+  @JoinTable(name = "ToppingDetail", joinColumns = {
       @JoinColumn(name = "ProductId")
   }, inverseJoinColumns = {
-      @JoinColumn(name = "ColorId") })
+      @JoinColumn(name = "ToppingId") })
   @Builder.Default
   @JsonManagedReference
-  private Set<Color> colors = new HashSet<>();
+  private Set<Topping> toppings = new HashSet<>();
 
 }

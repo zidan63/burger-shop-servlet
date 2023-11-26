@@ -30,7 +30,9 @@ public class FileController extends BaseController {
   protected void doGet(RequestAuth request, HttpServletResponse response)
       throws ServletException, IOException {
     // Đường dẫn tới thư mục lưu trữ file
-    String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
+    // String uploadPath = getServletContext().getRealPath("") + File.separator +
+    // "uploads";
+    String uploadPath = "/uploads";
 
     // Lấy tên file cần tải từ parameter
     String fileName = request.getParameter("fileName");
@@ -69,7 +71,9 @@ public class FileController extends BaseController {
       throws ServletException, IOException {
 
     // Get the upload directory real path
-    String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
+    // String uploadPath = getServletContext().getRealPath("") + File.separator +
+    // "uploads";
+    String uploadPath = "/uploads";
 
     // Create the upload directory if it doesn't exist
     File uploadDir = new File(uploadPath);

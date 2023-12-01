@@ -9,10 +9,7 @@ import com.burger.entities.*;
 import com.burger.enums.SearchAboutType;
 import com.burger.enums.SearchFieldType;
 import com.burger.exception.BaseException;
-import com.burger.others.Search;
-import com.burger.others.SearchAbout;
-import com.burger.others.SearchField;
-import com.burger.others.SearchResult;
+import com.burger.others.*;
 import com.burger.repositories.BillRepository;
 
 public class BillService extends BaseService<Bill, BillRepository> {
@@ -74,16 +71,28 @@ public class BillService extends BaseService<Bill, BillRepository> {
   }
 
   public SearchResult<Bill> findByFields(Search search, Map<String, String[]> map) throws BaseException {
-    List<SearchField> searchFields = List.of();
+    List<SearchField> searchFields = List.of(
+            SearchField.builder()
+                    .field("id")
+                    .values(map.get("id"))
+                    .type(SearchFieldType.NUMBER)
+                    .build(),
+            SearchField.builder()
+                    .field("user.fullName")
+                    .values(map.get("fullName"))
+                    .type(SearchFieldType.SUB_OBJECT)
+                    .build()
+    );
+    Console.Log(searchFields);
 //
 
     List<SearchAbout> searchAbouts = List.of(
-            SearchAbout.builder()
-                    .field("priceSale")
-                    .from(map.get("priceSaleFrom"))
-                    .to(map.get("priceSaleTo"))
-                    .type(SearchAboutType.NUMBER)
-                    .build(),
+//            SearchAbout.builder()
+//                    .field("priceSale")
+//                    .from(map.get("priceSaleFrom"))
+//                    .to(map.get("priceSaleTo"))
+//                    .type(SearchAboutType.NUMBER)
+//                    .build(),
             SearchAbout.builder()
                     .field("createdAt")
                     .from(map.get("createdAtFrom"))

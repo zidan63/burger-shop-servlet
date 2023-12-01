@@ -9,6 +9,8 @@ import org.hibernate.SessionFactory;
 
 import com.burger.config.HibernateInitialize;
 import com.burger.entities.BaseEntity;
+import com.burger.entities.Product;
+import com.burger.entities.Topping;
 import com.burger.enums.SearchAboutType;
 import com.burger.enums.SearchFieldType;
 import com.burger.enums.SearchType;
@@ -20,6 +22,7 @@ import com.burger.others.SearchResult;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
@@ -91,7 +94,7 @@ public class BaseRepository<T extends BaseEntity> {
         Path<Integer> fieldPath = root.get(searchField.getField());
         Integer value = searchField.getValueNumber();
         predicate = criteriaBuilder.equal(fieldPath, value);
-      } else {
+      } else if(searchField.getType() == SearchFieldType.ARRAY) {
         if (searchField.getValuesNumber() == null) {
           continue;
         }
@@ -99,7 +102,15 @@ public class BaseRepository<T extends BaseEntity> {
         Object[] values = searchField.getValuesNumber();
         predicate = root.get(searchField.getField()).in(values);
       }
+      else {
+        if (searchField.getValuesNumber() == null) {
+          continue;
+        }
 
+        Object[] values = searchField.getValuesNumber();
+        
+        predicate = root.join(searchField.getField()).get("id").in(values);
+      }
       predicates.add(predicate);
     }
 

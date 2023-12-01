@@ -45,6 +45,11 @@ public class ProductService extends BaseService<Product, ProductRepository> {
             .type(SearchFieldType.ARRAY)
             .build(),
         SearchField.builder()
+            .field("toppings")
+            .values(map.get("toppingIds"))
+            .type(SearchFieldType.JOIN)
+            .build(),
+        SearchField.builder()
             .field("supplier")
             .values(map.get("supplierId"))
             .type(SearchFieldType.ARRAY)

@@ -27,7 +27,7 @@ public class ToppingService extends BaseService<Topping, ToppingRepository> {
   }
 
   public SearchResult<Topping> findByFields(Search search, Map<String, String[]> map) throws BaseException {
-
+    
     List<SearchField> searchFields = List.of(
         SearchField.builder()
             .field("code")

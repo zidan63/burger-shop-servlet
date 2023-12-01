@@ -56,6 +56,12 @@ public class ProductService extends BaseService<Product, ProductRepository> {
             .build());
 
     List<SearchAbout> searchAbouts = List.of(
+            SearchAbout.builder()
+                    .field("priceSale")
+                    .from(map.get("priceSaleFrom"))
+                    .to(map.get("priceSaleTo"))
+                    .type(SearchAboutType.NUMBER)
+                    .build(),
         SearchAbout.builder()
             .field("priceSale")
             .from(map.get("priceSaleFrom"))

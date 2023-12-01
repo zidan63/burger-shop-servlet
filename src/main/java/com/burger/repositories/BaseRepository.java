@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.burger.others.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -14,10 +15,6 @@ import com.burger.entities.Topping;
 import com.burger.enums.SearchAboutType;
 import com.burger.enums.SearchFieldType;
 import com.burger.enums.SearchType;
-import com.burger.others.Search;
-import com.burger.others.SearchAbout;
-import com.burger.others.SearchField;
-import com.burger.others.SearchResult;
 
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -90,11 +87,27 @@ public class BaseRepository<T extends BaseEntity> {
         if (searchField.getValueNumber() == null) {
           continue;
         }
-
         Path<Integer> fieldPath = root.get(searchField.getField());
         Integer value = searchField.getValueNumber();
         predicate = criteriaBuilder.equal(fieldPath, value);
+
       } else if(searchField.getType() == SearchFieldType.ARRAY) {
+
+      } else if(searchField.getType() == SearchFieldType.SUB_OBJECT) {
+        String complexField = searchField.getField();
+        String[] splitField = complexField.split("\\.");
+        String value = searchField.getValueString();
+        Path<String> path =  searchField.getPath(root,complexField);
+        if(value != null && !value.equals("")) {
+
+          predicate = criteriaBuilder.like(path, "%" + value + "%");
+        }else {
+          predicate = criteriaBuilder.like(path, "%%");
+        }
+
+//        predicates.add(predicate);
+      }else {
+
         if (searchField.getValuesNumber() == null) {
           continue;
         }
@@ -171,13 +184,12 @@ public class BaseRepository<T extends BaseEntity> {
       criteriaQuery.where(criteriaBuilder.or(predicates.toArray(new Predicate[0])));
 
     criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updatedAt")));
-
+System.out.println(predicates.size());
     TypedQuery<T> query = session.createQuery(criteriaQuery);
     Long totalRecord = query.getResultStream().distinct().count();
 
     query.setFirstResult(start);
     query.setMaxResults(search.getPageSize());
-
     return new SearchResult<>(totalRecord, search.getPage(), query.getResultList());
   }
 

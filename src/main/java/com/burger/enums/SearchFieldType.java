@@ -5,4 +5,5 @@ public enum SearchFieldType {
   NUMBER,
   ARRAY,
   JOIN
+  SUB_OBJECT
 }

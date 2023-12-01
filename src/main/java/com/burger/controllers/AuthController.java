@@ -52,7 +52,6 @@ public class AuthController extends BaseController {
 
   private void login(HttpServletResponse resp, User user)
       throws BaseException, IOException {
-    System.out.println("User " + user.getUsername());
     LoginPayload result = AuthService.getInstance().login(user.getUsername(), user.getPassword());
 
     resp.getWriter().write(gson.toJson(result));

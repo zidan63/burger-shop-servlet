@@ -7,25 +7,3 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:8080
-
-  tomcat:
-    image: tomcat:10.1-jdk17
-    volumes:
-      - ./target/api.war:/usr/local/tomcat/webapps/api.war
-    ports:
-      - 3000:8080
-
-  db:
-    image: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_ROOT_HOST: "%"
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./db:/var/lib/mysql
-
-  adminer:
-    image: adminer
-    ports:
-      - "3305:8080"

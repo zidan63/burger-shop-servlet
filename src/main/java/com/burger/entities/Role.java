@@ -3,6 +3,9 @@ package com.burger.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Basic;
@@ -26,6 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "DeletedAt IS NULL")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Role extends BaseEntity {
   @Basic
   @Column(name = "Name", nullable = false)
@@ -40,5 +44,6 @@ public class Role extends BaseEntity {
       @JoinColumn(name = "RoleId")
   }, inverseJoinColumns = {
       @JoinColumn(name = "PermissionId") })
+  @JsonManagedReference
   private Set<Permission> permissions = new HashSet<>();
 }

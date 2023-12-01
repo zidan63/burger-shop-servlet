@@ -1,5 +1,7 @@
 package com.burger.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Basic;
@@ -12,13 +14,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Color")
+@Table(name = "Topping")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "DeletedAt IS NULL")
-public class Color extends BaseEntity {
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
+public class Topping extends BaseEntity {
   @Basic
   @Column(name = "Name", nullable = false)
   String name;

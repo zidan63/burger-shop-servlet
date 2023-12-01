@@ -10,6 +10,7 @@ import com.burger.entities.Product;
 import com.burger.enums.PermissionCode;
 import com.burger.middlewares.AuthMiddleware;
 import com.burger.middlewares.PermissionMiddleware;
+import com.burger.others.Console;
 import com.burger.others.RequestAuth;
 import com.burger.others.Search;
 import com.burger.others.SearchResult;
@@ -19,21 +20,34 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/products")
+@WebServlet({"/products", "/products/filters"})
 @Middlewares({ AuthMiddleware.class, PermissionMiddleware.class })
 public class ProductController extends BaseController {
   @Override
   protected void doGet(RequestAuth req, HttpServletResponse resp)
       throws ServletException, IOException {
     Map<String, String[]> map = req.getParameterMap();
+    String requestURI = req.getServletPath();
     Search search = Search.builder()
         .page(req.getParameter("page"))
         .pageSize(req.getParameter("pageSize"))
-        .type(req.getParameter("searchType"))
-        .build();
+        .type(req.getParameter("searchType")).build();
+//    System.out.println(map.get("categoryId")[0]);
+    switch (requestURI) {
+      case "/products": {
+        SearchResult<Product> result = ProductService.getInstance().findByFields(search, map);
+        resp.getWriter().write(gson.toJson(result));
+        break;
+      }
+      case "/products/filters": {
+        Console.Log(map);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
 
-    SearchResult<Product> result = ProductService.getInstance().findByFields(search, map);
-    resp.getWriter().write(gson.toJson(result));
   }
 
   @Override

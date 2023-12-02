@@ -82,6 +82,7 @@ public class BaseRepository<T extends BaseEntity> {
         Path<String> fieldPath = root.get(searchField.getField());
         String value = searchField.getValueString();
         predicate = criteriaBuilder.like(fieldPath, "%" + value + "%");
+
       } else if (searchField.getType() == SearchFieldType.NUMBER) {
 
         if (searchField.getValueNumber() == null) {
@@ -93,29 +94,27 @@ public class BaseRepository<T extends BaseEntity> {
 
       } else if(searchField.getType() == SearchFieldType.ARRAY) {
 
-      } else if(searchField.getType() == SearchFieldType.SUB_OBJECT) {
-        String complexField = searchField.getField();
-        String[] splitField = complexField.split("\\.");
-        String value = searchField.getValueString();
-        Path<String> path =  searchField.getPath(root,complexField);
-        if(value != null && !value.equals("")) {
-
-          predicate = criteriaBuilder.like(path, "%" + value + "%");
-        }else {
-          predicate = criteriaBuilder.like(path, "%%");
-        }
-
-//        predicates.add(predicate);
-      }else {
-
         if (searchField.getValuesNumber() == null) {
           continue;
         }
 
         Object[] values = searchField.getValuesNumber();
         predicate = root.get(searchField.getField()).in(values);
-      }
-      else {
+
+      } else if(searchField.getType() == SearchFieldType.SUB_OBJECT) {
+
+        String complexField = searchField.getField();
+        String[] splitField = complexField.split("\\.");
+        String value = searchField.getValueString();
+        Path<String> path =  searchField.getPath(root,complexField);
+        if(value != null && !value.equals("")) {
+          predicate = criteriaBuilder.like(path, "%" + value + "%");
+        } else {
+          predicate = criteriaBuilder.like(path, "%%");
+        }
+
+        
+      } else {
         if (searchField.getValuesNumber() == null) {
           continue;
         }
@@ -124,6 +123,7 @@ public class BaseRepository<T extends BaseEntity> {
         
         predicate = root.join(searchField.getField()).get("id").in(values);
       }
+      
       predicates.add(predicate);
     }
 
